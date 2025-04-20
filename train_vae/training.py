@@ -9,36 +9,45 @@ def train_epoch(model, dataloader, optimizer, criterion, alpha, device):
     """Training loop for one epoch."""
     model.train()
     running_loss = 0
+    running_kl_div = 0
     for data in dataloader:
         data = data.to(device)
         optimizer.zero_grad()
 
         reconstruction, mean, logvar = model(data)
         recon_loss = criterion(reconstruction, data)
-        kl_loss = -0.5 * torch.mean(1 + logvar - mean.pow(2) - logvar.exp())
+        kl_loss = -0.5 * torch.sum(1 + logvar - mean.pow(2) - logvar.exp()) / data.size(0)
         loss = recon_loss + alpha * kl_loss
 
         loss.backward()
         optimizer.step()
 
         running_loss += loss.item() * data.size(0)
+        running_kl_div += kl_loss.item() * data.size(0)
         
     epoch_loss = running_loss / len(dataloader.dataset)
-    return epoch_loss
+    epoch_kl = running_kl_div / len(dataloader.dataset)
+    return epoch_loss, epoch_kl
 
 def evaluate(model, dataloader, criterion, device):
     """Validation loop."""
     model.eval()
     running_loss = 0
+    running_kl_div = 0
     with torch.no_grad():
         for data in dataloader:
             data = data.to(device)
-            reconstruction, _, _ = model(data)
+
+            reconstruction, mean, logvar = model(data)
             loss = criterion(reconstruction, data)
+            kl_loss = -0.5 * torch.sum(1 + logvar - mean.pow(2) - logvar.exp()) / data.size(0)
+
             running_loss += loss.item() * data.size(0)
+            running_kl_div += kl_loss.item() * data.size(0)
     
     epoch_loss = running_loss / len(dataloader.dataset)
-    return epoch_loss
+    epoch_kl = running_kl_div / len(dataloader.dataset)
+    return epoch_loss, epoch_kl
 
 def get_latent_variables(model, dataloader, device):
     """Retrieve latent variables from the encoder."""

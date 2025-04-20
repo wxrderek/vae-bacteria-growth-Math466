@@ -16,6 +16,18 @@ def plot_loss(train_losses, test_losses, output_dir):
     plt.savefig(loss_plot_path)
     plt.close()
 
+def plot_kl(train_kl_losses, test_kl_losses, output_dir):
+    plt.figure(figsize=(6, 3))
+    plt.semilogy(train_kl_losses, label='Training KL Divergence Loss')
+    plt.semilogy(test_kl_losses, label='Testing KL Divergence Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.tight_layout()
+    kl_plot_path = os.path.join(output_dir, 'kl_loss_plot.png')
+    plt.savefig(kl_plot_path)
+    plt.close()
+
 def plot_reconstructions(model, subset_train_data, subset_test_data, output_dir, device):
     with torch.no_grad():
         output_train, _, _ = model(subset_train_data)

@@ -9,7 +9,7 @@ import argparse
 from data_loading import load_simulated_data
 from training import train_epoch, evaluate, count_parameters
 from utils import setup_logging, create_output_dir
-from plotting import plot_loss, plot_reconstructions, plot_sample_trajectories
+from plotting import plot_loss, plot_kl, plot_reconstructions, plot_sample_trajectories
 
 # import models
 from models.shallow_vae import VAE
@@ -30,7 +30,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     # hyperparameters for CNN
     batch_size = 32
     latent_channel = 16
-    alpha = 0.5e-4
+    alpha = 1e-4
     lr = 1e-3            
     min_lr = 4e-6 
     epochs = 500
@@ -115,6 +115,8 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     # training loop variables
     train_loss_values = []
     test_loss_values = []
+    train_kl_loss_values = []
+    test_kl_loss_values = []
     best_test_loss = np.inf
     best_state_dict = None
     epochs_no_improve = 0
@@ -123,13 +125,15 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info("Starting training loop...")
     for epoch in range(epochs):
         # train for one epoch
-        train_loss = train_epoch(model, train_loader, optimizer, criterion, alpha, device)
+        train_loss, train_kl_loss = train_epoch(model, train_loader, optimizer, criterion, alpha, device)
         # evaluate on test set
-        test_loss = evaluate(model, test_loader, criterion, device)
+        test_loss, test_kl_loss = evaluate(model, test_loader, criterion, device)
 
         # record losses
         train_loss_values.append(train_loss)
         test_loss_values.append(test_loss)
+        train_kl_loss_values.append(train_kl_loss)
+        test_kl_loss_values.append(test_kl_loss)
 
         # update learning rate
         if epoch < warmup_epochs:
@@ -178,6 +182,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
 
     # plot loss curves
     plot_loss(train_loss_values, test_loss_values, output_dir)
+    plot_kl(train_kl_loss_values, test_kl_loss_values, output_dir)
 
     # retrieve a subset of data for reconstruction plots
     percentage = 0.2

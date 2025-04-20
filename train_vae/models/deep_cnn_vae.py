@@ -11,16 +11,7 @@ class DeepCNNEncoder(nn.Module):
         self.seq_length = seq_length
         
         self.encoder = nn.Sequential(
-            nn.Conv1d(1, 128, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm1d(128),
-            nn.ReLU(),
-            nn.Conv1d(128, 128, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm1d(128),
-            nn.ReLU(),
-            nn.Conv1d(128, 64, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm1d(64),
-            nn.ReLU(),
-            nn.Conv1d(64, 64, kernel_size=3, stride=1, padding=1),
+            nn.Conv1d(1, 64, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm1d(64),
             nn.ReLU(),
             nn.Conv1d(64, 32, kernel_size=3, stride=1, padding=1),
@@ -60,19 +51,10 @@ class DeepCNNDecoder(nn.Module):
             nn.ConvTranspose1d(16, 32, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm1d(32),
             nn.ReLU(),
-            nn.ConvTranspose1d(32, 32, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm1d(32),
-            nn.ReLU(),
             nn.ConvTranspose1d(32, 64, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.ConvTranspose1d(64, 64, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm1d(64),
-            nn.ReLU(),
-            nn.ConvTranspose1d(64, 128, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm1d(128),
-            nn.ReLU(),
-            nn.ConvTranspose1d(128, 1, kernel_size=3, stride=1, padding=1),
+            nn.ConvTranspose1d(64, 1, kernel_size=3, stride=1, padding=1),
             nn.Softplus(),
         )
 
