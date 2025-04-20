@@ -1,0 +1,28 @@
+2025-04-20 03:44:54,376 - INFO - Model type received: VAE
+2025-04-20 03:44:54,376 - INFO - Distribution type received: truncnorm
+2025-04-20 03:44:54,376 - INFO - Using data directory: simulated_data/
+2025-04-20 03:44:54,376 - INFO - Loading simulated data from simulated_data/
+2025-04-20 03:44:54,376 - INFO - Loading simulated data from simulated_data/curves1k.npz
+2025-04-20 03:44:54,475 - INFO - Simulated data shape: (1000, 450)
+2025-04-20 03:44:54,475 - INFO - Combined data shape after shuffling: (1000, 450)
+2025-04-20 03:44:56,227 - INFO - Using device: cuda
+2025-04-20 03:44:56,227 - INFO - CUDA is available. Device count: 1
+2025-04-20 03:44:56,243 - INFO - Current device: 0
+2025-04-20 03:44:56,243 - INFO - Device name: NVIDIA RTX A500 Laptop GPU
+2025-04-20 03:44:56,251 - INFO - The model VAE is currently being trained
+2025-04-20 03:44:56,340 - INFO - The model has 232,773 parameters
+2025-04-20 03:44:58,361 - INFO - Starting training loop...
+2025-04-20 03:44:59,881 - INFO - Epoch: 2 | Train Loss: 0.2010313, Test Loss: 0.1250753, Lr: 0.00030000
+2025-04-20 03:45:00,867 - INFO - Epoch: 4 | Train Loss: 0.0104543, Test Loss: 0.0046503, Lr: 0.00050000
+2025-04-20 03:45:01,868 - INFO - Epoch: 6 | Train Loss: 0.0026311, Test Loss: 0.0016234, Lr: 0.00070000
+2025-04-20 03:45:02,854 - INFO - Epoch: 8 | Train Loss: 0.0017603, Test Loss: 0.0011660, Lr: 0.00090000
+2025-04-20 03:45:03,821 - INFO - Epoch: 10 | Train Loss: 0.0014586, Test Loss: 0.0008838, Lr: 0.00100000
+2025-04-20 03:45:18,621 - INFO - Epoch: 40 | Train Loss: 0.0004386, Test Loss: 0.0002169, Lr: 0.00054548
+2025-04-20 03:45:38,557 - INFO - Epoch: 80 | Train Loss: 0.0003052, Test Loss: 0.0000788, Lr: 0.00024312
+2025-04-20 03:45:58,207 - INFO - Epoch: 120 | Train Loss: 0.0002737, Test Loss: 0.0000541, Lr: 0.00010836
+2025-04-20 03:46:17,529 - INFO - Epoch: 160 | Train Loss: 0.0002608, Test Loss: 0.0000571, Lr: 0.00004830
+2025-04-20 03:46:36,818 - INFO - Epoch: 200 | Train Loss: 0.0002488, Test Loss: 0.0000466, Lr: 0.00002153
+2025-04-20 03:46:56,026 - INFO - Epoch: 240 | Train Loss: 0.0002440, Test Loss: 0.0000452, Lr: 0.00000959
+2025-04-20 03:47:08,623 - INFO - Early stopping triggered!
+2025-04-20 03:47:08,623 - INFO - Training completed.
+2025-04-20 03:47:08,634 - INFO - Best model saved to train_vae_output\VAE_LD10_LC16_LR0.001_DISTtruncnorm_TS20250420_034454\models\best_model.pt
