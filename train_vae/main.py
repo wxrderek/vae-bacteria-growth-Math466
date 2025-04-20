@@ -23,7 +23,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info(f"Distribution type received: {distribution_type}")
 
     # common hyperparameters
-    latent_dim = 16
+    latent_dim = 8
     alpha = 1
 
     # hyperparameters for linear
@@ -35,7 +35,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     latent_channel = 16
     lr = 1e-3            
     min_lr = 4e-6 
-    epochs = 500
+    epochs = 1000
     gamma = 0.98
     weight_decay = 1e-5
 
