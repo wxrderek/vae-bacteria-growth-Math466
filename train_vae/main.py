@@ -22,9 +22,13 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info(f"Model type received: {model_type}")
     logger.info(f"Distribution type received: {distribution_type}")
 
-    # hyperparameters
+    # hyperparameters for linear
+    input_dim = 800
+    hidden_dim = 32
+    latent_dim = 8
+
+    # hyperparameters for CNN
     batch_size = 32
-    latent_dim = 10
     latent_channel = 16
     alpha = 0.5e-4
     lr = 1e-3            
@@ -87,7 +91,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
 
     # initialize model based on the selected architecture
     if model_type == 'VAE':
-        model = VAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
+        model = VAE(input_dim=input_dim, hidden_dim=hidden_dim, latent_dim=latent_dim)
     elif model_type == 'DeepCNNVAE':
         model = DeepCNNVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
     else:
