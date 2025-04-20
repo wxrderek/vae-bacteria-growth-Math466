@@ -22,15 +22,17 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info(f"Model type received: {model_type}")
     logger.info(f"Distribution type received: {distribution_type}")
 
+    # common hyperparameters
+    latent_dim = 16
+    alpha = 1
+
     # hyperparameters for linear
-    input_dim = 800
+    input_dim = 600
     hidden_dim = 32
-    latent_dim = 8
 
     # hyperparameters for CNN
     batch_size = 32
     latent_channel = 16
-    alpha = 1e-4
     lr = 1e-3            
     min_lr = 4e-6 
     epochs = 500

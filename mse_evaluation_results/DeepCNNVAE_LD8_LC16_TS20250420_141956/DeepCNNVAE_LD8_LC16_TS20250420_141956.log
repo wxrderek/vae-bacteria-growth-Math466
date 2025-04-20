@@ -1,0 +1,16 @@
+2025-04-20 14:19:56,605 - INFO - Loading simulated data from simulated_data
+2025-04-20 14:19:56,608 - INFO - Loading simulated data from simulated_data\curves1k.npz
+2025-04-20 14:19:56,822 - INFO - Simulated data shape: (1600, 600)
+2025-04-20 14:19:56,841 - INFO - Combined data shape: torch.Size([1600, 1, 600])
+2025-04-20 14:19:56,844 - INFO - Data range: [0.0000, 1.6400]
+2025-04-20 14:19:58,545 - INFO - Using device: cuda
+2025-04-20 14:19:58,545 - INFO - Initializing DeepCNNVAE model
+2025-04-20 14:19:58,551 - INFO - Loading model weights from train_vae_output\DeepCNNVAE_LD8_LC16_LR0.001_DISTtruncnorm_TS20250420_134216\models\best_model.pt
+2025-04-20 14:19:58,664 - INFO - Calculating reconstruction MSE
+2025-04-20 14:19:58,664 - INFO - Test data shape: torch.Size([160, 1, 600])
+2025-04-20 14:19:58,666 - INFO - Test data range: [0.0000, 1.6400]
+2025-04-20 14:19:59,011 - INFO - Sample batch MSE: 0.0972721
+2025-04-20 14:19:59,023 - INFO - Sample input range: [0.0000, 1.6398]
+2025-04-20 14:19:59,023 - INFO - Sample reconstruction range: [0.0000, 0.9969]
+2025-04-20 14:19:59,023 - INFO - Overall reconstruction MSE: 0.0937960
+2025-04-20 14:19:59,037 - INFO - Results saved to mse_evaluation_results\DeepCNNVAE_LD8_LC16_TS20250420_141956\DeepCNNVAE_LD8_LC16_TS20250420_141956.json

@@ -15,7 +15,7 @@ from training import calculate_mse
 from data_loading import load_simulated_data
 
 
-def create_output_dir(base_dir, model_type, latent_dim, latent_channel):
+def create_output_dir(base_dir, model_type, input_dim, hidden_dim, latent_dim, latent_channel):
     """Create a unique output directory based on model configuration and timestamp."""
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     dir_name = f"{model_type}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}"
@@ -57,7 +57,7 @@ def normalize_data(data, logger):
     return normalized_data, scaler
 
 
-def load_data(data_directory, isolates_path, logger):
+def load_data(data_directory, logger):
     """Load, normalize, and prepare the dataset."""
     logger.info("Loading simulated data from %s", data_directory)
     all_data = load_simulated_data(data_directory, logger)
@@ -73,7 +73,7 @@ def load_data(data_directory, isolates_path, logger):
     return data, None
 
 
-def get_model(model_type, latent_dim, latent_channel, seq_length, logger):
+def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq_length, logger):
     """Initialize the specified model."""
     logger.info("Initializing %s model", model_type)
     model_classes = {
@@ -84,7 +84,14 @@ def get_model(model_type, latent_dim, latent_channel, seq_length, logger):
     if model_type not in model_classes:
         raise ValueError(f"Unknown model type: {model_type}")
     
-    return model_classes[model_type](
+    if model_type in ['VAE']:
+        return model_classes[model_type](
+            input_dim=input_dim,
+            hidden_dim=hidden_dim,
+            latent_dim=latent_dim
+        )
+    else: 
+        return model_classes[model_type](
         latent_dim=latent_dim,
         latent_channel=latent_channel,
         seq_length=seq_length
@@ -94,7 +101,7 @@ def get_model(model_type, latent_dim, latent_channel, seq_length, logger):
 def evaluate_saved_model(args, logger):
     """Evaluate a saved model with the specified parameters."""
     # load and normalize data
-    data, _ = load_data(args.data_directory, args.isolates_path, logger)
+    data, _ = load_data(args.data_directory, logger)
     
     # split the data
     train_data, test_data, _, _ = train_test_split(
@@ -111,6 +118,8 @@ def evaluate_saved_model(args, logger):
     # Initialize model
     model = get_model(
         args.model_type,
+        args.input_dim,
+        args.hidden_dim,
         args.latent_dim,
         args.latent_channel,
         data.shape[2],
@@ -147,6 +156,8 @@ def evaluate_saved_model(args, logger):
         'mse': float(mse),
         'timestamp': datetime.now().isoformat(),
         'parameters': {
+            'input_dim': args.input_dim,
+            'hidden_dim': args.hidden_dim,
             'latent_dim': args.latent_dim,
             'latent_channel': args.latent_channel,
             'batch_size': args.batch_size
@@ -170,9 +181,10 @@ def parse_arguments():
     parser.add_argument('--data-directory', type=Path,
                       default='simulated_data/',
                       help='Directory containing simulated data')
-    parser.add_argument('--isolates-path', type=Path,
-                      default='data/isolates/OD_311_isolates.npz',
-                      help='Path to isolates data file')
+    parser.add_argument('--input-dim', type=int, default=600,
+                      help='Dimension of input')
+    parser.add_argument('--hidden-dim', type=int, default=32,
+                      help='Dimension of hidden layers')
     parser.add_argument('--latent-dim', type=int, default=10,
                       help='Dimension of latent space')
     parser.add_argument('--latent-channel', type=int, default=16,
@@ -190,6 +202,8 @@ if __name__ == "__main__":
     args.output_dir = create_output_dir(
         base_output_dir,
         args.model_type,
+        args.input_dim,
+        args.hidden_dim,
         args.latent_dim,
         args.latent_channel,
     )

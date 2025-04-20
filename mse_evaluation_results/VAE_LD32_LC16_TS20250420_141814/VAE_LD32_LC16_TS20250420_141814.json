@@ -1,0 +1,13 @@
+{
+    "model_type": "VAE",
+    "model_path": "train_vae_output\\VAE_LD32_LC16_LR0.001_DISTtruncnorm_TS20250420_141700\\models\\best_model.pt",
+    "mse": 0.09361078292131424,
+    "timestamp": "2025-04-20T14:18:16.720368",
+    "parameters": {
+        "input_dim": 600,
+        "hidden_dim": 32,
+        "latent_dim": 32,
+        "latent_channel": 16,
+        "batch_size": 32
+    }
+}

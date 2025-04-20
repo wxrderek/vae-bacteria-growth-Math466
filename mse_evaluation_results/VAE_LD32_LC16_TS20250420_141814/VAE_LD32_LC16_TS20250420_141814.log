@@ -1,0 +1,16 @@
+2025-04-20 14:18:14,551 - INFO - Loading simulated data from simulated_data
+2025-04-20 14:18:14,551 - INFO - Loading simulated data from simulated_data\curves1k.npz
+2025-04-20 14:18:14,712 - INFO - Simulated data shape: (1600, 600)
+2025-04-20 14:18:14,724 - INFO - Combined data shape: torch.Size([1600, 1, 600])
+2025-04-20 14:18:14,724 - INFO - Data range: [0.0000, 1.6400]
+2025-04-20 14:18:16,435 - INFO - Using device: cuda
+2025-04-20 14:18:16,435 - INFO - Initializing VAE model
+2025-04-20 14:18:16,435 - INFO - Loading model weights from train_vae_output\VAE_LD32_LC16_LR0.001_DISTtruncnorm_TS20250420_141700\models\best_model.pt
+2025-04-20 14:18:16,545 - INFO - Calculating reconstruction MSE
+2025-04-20 14:18:16,545 - INFO - Test data shape: torch.Size([160, 1, 600])
+2025-04-20 14:18:16,545 - INFO - Test data range: [0.0000, 1.6400]
+2025-04-20 14:18:16,713 - INFO - Sample batch MSE: 0.0974748
+2025-04-20 14:18:16,720 - INFO - Sample input range: [0.0000, 1.6398]
+2025-04-20 14:18:16,720 - INFO - Sample reconstruction range: [0.0019, 0.9360]
+2025-04-20 14:18:16,720 - INFO - Overall reconstruction MSE: 0.0936108
+2025-04-20 14:18:16,742 - INFO - Results saved to mse_evaluation_results\VAE_LD32_LC16_TS20250420_141814\VAE_LD32_LC16_TS20250420_141814.json

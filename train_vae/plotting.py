@@ -6,8 +6,8 @@ import torch
 
 def plot_loss(train_losses, test_losses, output_dir):
     plt.figure(figsize=(6, 3))
-    plt.semilogy(train_losses, label='Training')
-    plt.semilogy(test_losses, label='Testing')
+    plt.semilogy(train_losses, label=f'Training-Min. Loss: {np.min(train_losses):.6f}')
+    plt.semilogy(test_losses, label=f'Testing-Min. Loss: {np.min(test_losses):.6f}')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()

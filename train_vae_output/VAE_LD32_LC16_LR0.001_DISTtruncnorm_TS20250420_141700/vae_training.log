@@ -1,0 +1,23 @@
+2025-04-20 14:17:00,223 - INFO - Model type received: VAE
+2025-04-20 14:17:00,223 - INFO - Distribution type received: truncnorm
+2025-04-20 14:17:00,223 - INFO - Using data directory: simulated_data/
+2025-04-20 14:17:00,237 - INFO - Loading simulated data from simulated_data/
+2025-04-20 14:17:00,237 - INFO - Loading simulated data from simulated_data/curves1k.npz
+2025-04-20 14:17:00,445 - INFO - Simulated data shape: (1600, 600)
+2025-04-20 14:17:00,447 - INFO - Combined data shape after shuffling: (1600, 600)
+2025-04-20 14:17:02,188 - INFO - Using device: cuda
+2025-04-20 14:17:02,190 - INFO - CUDA is available. Device count: 1
+2025-04-20 14:17:02,194 - INFO - Current device: 0
+2025-04-20 14:17:02,194 - INFO - Device name: NVIDIA RTX A500 Laptop GPU
+2025-04-20 14:17:02,199 - INFO - The model VAE is currently being trained
+2025-04-20 14:17:02,267 - INFO - The model has 46,424 parameters
+2025-04-20 14:17:04,394 - INFO - Starting training loop...
+2025-04-20 14:17:05,264 - INFO - Epoch: 2 | Train Loss: 1.9765425, Test Loss: 0.3509201, Lr: 0.00030000
+2025-04-20 14:17:05,958 - INFO - Epoch: 4 | Train Loss: 0.2629865, Test Loss: 0.1246417, Lr: 0.00050000
+2025-04-20 14:17:06,547 - INFO - Epoch: 6 | Train Loss: 0.0987929, Test Loss: 0.1020769, Lr: 0.00070000
+2025-04-20 14:17:07,161 - INFO - Epoch: 8 | Train Loss: 0.0962926, Test Loss: 0.1009206, Lr: 0.00090000
+2025-04-20 14:17:07,732 - INFO - Epoch: 10 | Train Loss: 0.0957430, Test Loss: 0.1010457, Lr: 0.00100000
+2025-04-20 14:17:16,758 - INFO - Epoch: 40 | Train Loss: 0.0947097, Test Loss: 0.1004152, Lr: 0.00054548
+2025-04-20 14:17:22,093 - INFO - Early stopping triggered!
+2025-04-20 14:17:22,093 - INFO - Training completed.
+2025-04-20 14:17:22,102 - INFO - Best model saved to train_vae_output\VAE_LD32_LC16_LR0.001_DISTtruncnorm_TS20250420_141700\models\best_model.pt
