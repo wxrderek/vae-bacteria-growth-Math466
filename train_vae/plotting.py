@@ -28,10 +28,14 @@ def plot_kl(train_kl_losses, test_kl_losses, output_dir):
     plt.savefig(kl_plot_path)
     plt.close()
 
-def plot_reconstructions(model, subset_train_data, subset_test_data, output_dir, device):
+def plot_reconstructions(model, model_type, subset_train_data, subset_test_data, output_dir, device):
     with torch.no_grad():
-        output_train, _, _, _ = model(subset_train_data)
-        output_test, _, _, _ = model(subset_test_data)
+        if (model_type == 'BetaVAE'):
+            output_train, _, _, _ = model(subset_train_data)
+            output_test, _, _, _ = model(subset_test_data)
+        else: 
+            output_train, _, _ = model(subset_train_data)
+            output_test, _, _ = model(subset_test_data)
 
     output_train = output_train.squeeze(1).cpu().numpy()
     output_test = output_test.squeeze(1).cpu().numpy()
@@ -75,10 +79,14 @@ def plot_reconstructions(model, subset_train_data, subset_test_data, output_dir,
     plt.savefig(scatter_path)
     plt.close()
 
-def plot_sample_trajectories(model, subset_train_data, subset_test_data, output_dir, device):
+def plot_sample_trajectories(model, model_type, subset_train_data, subset_test_data, output_dir, device):
     with torch.no_grad():
-        output_train, _, _, _ = model(subset_train_data)
-        output_test, _, _, _ = model(subset_test_data)
+        if (model_type == 'BetaVAE'):
+            output_train, _, _, _ = model(subset_train_data)
+            output_test, _, _, _ = model(subset_test_data)
+        else: 
+            output_train, _, _ = model(subset_train_data)
+            output_test, _, _ = model(subset_test_data)
 
     output_train = output_train.squeeze(1).cpu().numpy()
     output_test = output_test.squeeze(1).cpu().numpy()

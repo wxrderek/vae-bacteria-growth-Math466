@@ -202,7 +202,7 @@ def parse_arguments():
                       help='Number of latent channels')
     parser.add_argument('--batch-size', type=int, default=32,
                       help='Batch size for evaluation')
-    parser.add_argument('--beta', type=float, default=0.5,
+    parser.add_argument('--alpha', type=float, default=0.5,
                       help='Beta skew for BetaVAE')
     return parser.parse_args()
 
@@ -219,6 +219,7 @@ if __name__ == "__main__":
         args.hidden_dim,
         args.latent_dim,
         args.latent_channel,
+        args.alpha
     )
     
     # Set up logger

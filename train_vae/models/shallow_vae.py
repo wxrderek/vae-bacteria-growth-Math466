@@ -11,11 +11,13 @@ class VAEEncoder(nn.Module):
         self.latent_dim = latent_dim
         self.encoder = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
-            nn.Softplus(),
+            nn.ReLU(),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.Softplus(),
+            nn.ReLU(),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.Softplus(),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
         )
         self.fc_mean = nn.Linear(hidden_dim, latent_dim)
         self.fc_logvar = nn.Linear(hidden_dim, latent_dim)
@@ -34,13 +36,15 @@ class VAEDecoder(nn.Module):
         self.hidden_dim = hidden_dim
         self.latent_dim = latent_dim
         self.decoder = nn.Sequential(
-            nn.Softplus(),
+            nn.ReLU(),
             nn.Linear(latent_dim, hidden_dim),
-            nn.Softplus(),
+            nn.ReLU(),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.Softplus(),
+            nn.ReLU(),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.Softplus(),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
             nn.Linear(hidden_dim, input_dim)
         )
 

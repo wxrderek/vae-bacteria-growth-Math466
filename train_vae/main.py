@@ -24,7 +24,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info(f"Distribution type received: {distribution_type}")
 
     # common hyperparameters
-    latent_dim = 12
+    latent_dim = 8
     alpha = 0.5 # for AlphaVAE
 
     # hyperparameters for linear
@@ -198,10 +198,10 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     subset_test_data = test_data[:num_test_samples].to(device)
 
     # plot reconstructions
-    plot_reconstructions(model, subset_train_data, subset_test_data, output_dir, device)
+    plot_reconstructions(model, model_type, subset_train_data, subset_test_data, output_dir, device)
 
     # plot sample trajectories
-    plot_sample_trajectories(model, subset_train_data, subset_test_data, output_dir, device)
+    plot_sample_trajectories(model, model_type, subset_train_data, subset_test_data, output_dir, device)
 
 
 if __name__ == '__main__':

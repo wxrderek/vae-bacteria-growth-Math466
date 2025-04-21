@@ -45,7 +45,9 @@ def evaluate(model, model_type, dataloader, criterion, device):
         for data in dataloader:
             data = data.to(device)
 
-            reconstruction, mean, logvar, _ = model(data)
+            if (model_type=="BetaVAE"): reconstruction, mean, logvar, _ = model(data)
+            else: reconstruction, mean, logvar = model(data)
+
             recon_loss = criterion(reconstruction, data)
             kl_loss = -0.5 * torch.mean(1 + logvar - mean.pow(2) - logvar.exp())
             loss = recon_loss + kl_loss
