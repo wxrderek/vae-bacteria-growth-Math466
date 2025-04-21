@@ -87,23 +87,23 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
         raise ValueError(f"Unknown model type: {model_type}")
     
     if model_type == 'VAE':
-        return model_classes[model_type](
+        return VAE(
             input_dim=input_dim,
             hidden_dim=hidden_dim,
             latent_dim=latent_dim
         )
     elif model_type == 'DeepCNNVAE': 
-        return model_classes[model_type](
-        latent_dim=latent_dim,
-        latent_channel=latent_channel,
-        seq_length=seq_length
+        return DeepCNNVAE(
+            latent_dim=latent_dim,
+            latent_channel=latent_channel,
+            seq_length=seq_length
         )
     elif model_type == 'BetaVAE': 
-        return model_classes[model_type](
-        latent_dim=latent_dim,
-        latent_channel=latent_channel,
-        seq_length=seq_length,
-        alpha=alpha
+        return BetaVAE(
+            latent_dim=latent_dim,
+            latent_channel=latent_channel,
+            seq_length=seq_length,
+            alpha=alpha
         )
 
 
@@ -131,8 +131,8 @@ def evaluate_saved_model(args, logger):
         args.hidden_dim,
         args.latent_dim,
         args.latent_channel,
-        args.alpha,
         data.shape[2],
+        args.alpha,
         logger
     )
     
@@ -151,7 +151,7 @@ def evaluate_saved_model(args, logger):
     # Log reconstructions for a small batch
     with torch.no_grad():
         sample_batch = next(iter(test_loader)).to(device)
-        reconstruction, _, _ = model(sample_batch)
+        reconstruction, _, _, _ = model(sample_batch)
         sample_mse = torch.mean((reconstruction - sample_batch) ** 2).item()
         logger.info(f"Sample batch MSE: {sample_mse:.7f}")
         logger.info(f"Sample input range: [{sample_batch.min():.4f}, {sample_batch.max():.4f}]")
@@ -196,13 +196,13 @@ def parse_arguments():
                       help='Dimension of input')
     parser.add_argument('--hidden-dim', type=int, default=32,
                       help='Dimension of hidden layers')
-    parser.add_argument('--latent-dim', type=int, default=10,
+    parser.add_argument('--latent-dim', type=int, default=12,
                       help='Dimension of latent space')
     parser.add_argument('--latent-channel', type=int, default=16,
                       help='Number of latent channels')
     parser.add_argument('--batch-size', type=int, default=32,
                       help='Batch size for evaluation')
-    parser.add_argument('--alpha', type=float, default=0.5,
+    parser.add_argument('--alpha', type=float, default=1,
                       help='Beta skew for BetaVAE')
     return parser.parse_args()
 

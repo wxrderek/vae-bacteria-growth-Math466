@@ -32,7 +32,7 @@ def main(args):
     logging.info(f'Using device: {device}')
 
     # common hyperparameters
-    latent_dim = 8
+    latent_dim = 12
     alpha = 0.5 # for AlphaVAE
 
     # hyperparameters for linear

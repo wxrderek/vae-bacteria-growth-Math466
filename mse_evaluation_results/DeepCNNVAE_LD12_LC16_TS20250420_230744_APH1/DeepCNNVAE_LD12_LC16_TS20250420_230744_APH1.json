@@ -1,0 +1,14 @@
+{
+    "model_type": "DeepCNNVAE",
+    "model_path": "train_vae_output\\DeepCNNVAE_LD12_LC16_LR0.001_DISTtruncnorm_TS20250420_222856\\models\\best_model.pt",
+    "mse": 0.06214042454957962,
+    "timestamp": "2025-04-20T23:07:46.607810",
+    "parameters": {
+        "input_dim": 600,
+        "hidden_dim": 32,
+        "latent_dim": 12,
+        "latent_channel": 16,
+        "batch_size": 32,
+        "alpha": 1
+    }
+}
