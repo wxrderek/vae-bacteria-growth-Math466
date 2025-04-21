@@ -14,6 +14,7 @@ from plotting import plot_loss, plot_kl, plot_reconstructions, plot_sample_traje
 # import models
 from models.shallow_vae import VAE
 from models.deep_cnn_vae import DeepCNNVAE
+from models.beta_vae import BetaVAE
 
 
 def main(model_type='VAE', distribution_type='truncnorm'):
@@ -23,8 +24,8 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info(f"Distribution type received: {distribution_type}")
 
     # common hyperparameters
-    latent_dim = 8
-    alpha = 1
+    latent_dim = 12
+    alpha = 0.5 # for AlphaVAE
 
     # hyperparameters for linear
     input_dim = 600
@@ -96,6 +97,8 @@ def main(model_type='VAE', distribution_type='truncnorm'):
         model = VAE(input_dim=input_dim, hidden_dim=hidden_dim, latent_dim=latent_dim)
     elif model_type == 'DeepCNNVAE':
         model = DeepCNNVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
+    elif model_type == 'BetaVAE':
+        model = BetaVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length, alpha=alpha)
     else:
         raise ValueError(f"Unknown model type: {model_type}")
 
@@ -127,9 +130,9 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info("Starting training loop...")
     for epoch in range(epochs):
         # train for one epoch
-        train_loss, train_kl_loss = train_epoch(model, train_loader, optimizer, criterion, alpha, device)
+        train_loss, train_kl_loss = train_epoch(model, model_type, train_loader, optimizer, criterion, device)
         # evaluate on test set
-        test_loss, test_kl_loss = evaluate(model, test_loader, criterion, device)
+        test_loss, test_kl_loss = evaluate(model, model_type, test_loader, criterion, device)
 
         # record losses
         train_loss_values.append(train_loss)
@@ -204,7 +207,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train VAE Models')
     parser.add_argument('--model', type=str, default='VAE',
-                        choices=['VAE', 'DeepCNNVAE'],
+                        choices=['VAE', 'DeepCNNVAE', 'BetaVAE'],
                         help='Specify which VAE architecture to use')
     args = parser.parse_args()
 

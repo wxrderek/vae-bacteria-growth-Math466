@@ -30,8 +30,8 @@ def plot_kl(train_kl_losses, test_kl_losses, output_dir):
 
 def plot_reconstructions(model, subset_train_data, subset_test_data, output_dir, device):
     with torch.no_grad():
-        output_train, _, _ = model(subset_train_data)
-        output_test, _, _ = model(subset_test_data)
+        output_train, _, _, _ = model(subset_train_data)
+        output_test, _, _, _ = model(subset_test_data)
 
     output_train = output_train.squeeze(1).cpu().numpy()
     output_test = output_test.squeeze(1).cpu().numpy()
@@ -77,8 +77,8 @@ def plot_reconstructions(model, subset_train_data, subset_test_data, output_dir,
 
 def plot_sample_trajectories(model, subset_train_data, subset_test_data, output_dir, device):
     with torch.no_grad():
-        output_train, _, _ = model(subset_train_data)
-        output_test, _, _ = model(subset_test_data)
+        output_train, _, _, _ = model(subset_train_data)
+        output_test, _, _, _ = model(subset_test_data)
 
     output_train = output_train.squeeze(1).cpu().numpy()
     output_test = output_test.squeeze(1).cpu().numpy()

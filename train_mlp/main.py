@@ -18,6 +18,7 @@ if parent_dir not in sys.path:
 
 from train_vae.models.shallow_vae import VAE
 from train_vae.models.deep_cnn_vae import DeepCNNVAE
+from train_vae.models.beta_vae import BetaVAE
 
 import argparse
 from datetime import datetime
@@ -32,7 +33,7 @@ def main(args):
 
     # common hyperparameters
     latent_dim = 8
-    alpha = 1
+    alpha = 0.5 # for AlphaVAE
 
     # hyperparameters for linear
     input_dim = 600
@@ -54,7 +55,7 @@ def main(args):
     percentage = 0.2
 
     # Validate model choice
-    valid_models = ['VAE', 'DeepCNNVAE']
+    valid_models = ['VAE', 'DeepCNNVAE', 'BetaVAE']
     if args.model not in valid_models:
         raise ValueError(f"Invalid model choice '{args.model}'. Valid options are: {valid_models}")
     
@@ -66,7 +67,8 @@ def main(args):
     
     model_name = (
         'VAE' if args.model == 'VAE' else
-        'DeepCNNVAE'
+        'DeepCNNVAE' if args.model == 'DeepCNNVAE' else
+        'BetaVAE'
     )
     
     output_dir = f'train_vae_mlp_output/{model_name}_LD{latent_dim}_LC{latent_channel}_LR{lr}_DIST{distribution_type}_TS{timestamp}'
@@ -114,6 +116,8 @@ def main(args):
         vae_model = VAE(input_dim, hidden_dim, latent_dim).to(device)
     elif args.model == 'DeepCNNVAE':
         vae_model = DeepCNNVAE(latent_dim, latent_channel, input_size).to(device)
+    elif args.model == 'BetaVAE':
+        vae_model = BetaVAE(latent_dim, latent_channel, input_size, alpha=alpha).to(device)
    
     logging.info(f'{model_name} model instantiated.')
 
@@ -221,7 +225,7 @@ if __name__ == '__main__':
     
     # Model configuration
     parser.add_argument('--model', type=str, default='VAE',
-                       choices=['VAE', 'DeepCNNVAE'],
+                       choices=['VAE', 'DeepCNNVAE, BetaVAE'],
                        help='Choice of VAE architecture')
     
     # Data paths

@@ -11,14 +11,15 @@ from pathlib import Path
 
 from models.shallow_vae import VAE
 from models.deep_cnn_vae import DeepCNNVAE
+from models.beta_vae import BetaVAE
 from training import calculate_mse
 from data_loading import load_simulated_data
 
 
-def create_output_dir(base_dir, model_type, input_dim, hidden_dim, latent_dim, latent_channel):
+def create_output_dir(base_dir, model_type, input_dim, hidden_dim, latent_dim, latent_channel, alpha):
     """Create a unique output directory based on model configuration and timestamp."""
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    dir_name = f"{model_type}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}"
+    dir_name = f"{model_type}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}_APH{alpha}"
     output_dir = Path(base_dir) / dir_name
     output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir
@@ -73,29 +74,37 @@ def load_data(data_directory, logger):
     return data, None
 
 
-def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq_length, logger):
+def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq_length, alpha, logger):
     """Initialize the specified model."""
     logger.info("Initializing %s model", model_type)
     model_classes = {
         'VAE': VAE,
         'DeepCNNVAE': DeepCNNVAE,
+        'BetaVAE': BetaVAE
     }
     
     if model_type not in model_classes:
         raise ValueError(f"Unknown model type: {model_type}")
     
-    if model_type in ['VAE']:
+    if model_type == 'VAE':
         return model_classes[model_type](
             input_dim=input_dim,
             hidden_dim=hidden_dim,
             latent_dim=latent_dim
         )
-    else: 
+    elif model_type == 'DeepCNNVAE': 
         return model_classes[model_type](
         latent_dim=latent_dim,
         latent_channel=latent_channel,
         seq_length=seq_length
-    )
+        )
+    elif model_type == 'BetaVAE': 
+        return model_classes[model_type](
+        latent_dim=latent_dim,
+        latent_channel=latent_channel,
+        seq_length=seq_length,
+        alpha=alpha
+        )
 
 
 def evaluate_saved_model(args, logger):
@@ -122,6 +131,7 @@ def evaluate_saved_model(args, logger):
         args.hidden_dim,
         args.latent_dim,
         args.latent_channel,
+        args.alpha,
         data.shape[2],
         logger
     )
@@ -160,7 +170,8 @@ def evaluate_saved_model(args, logger):
             'hidden_dim': args.hidden_dim,
             'latent_dim': args.latent_dim,
             'latent_channel': args.latent_channel,
-            'batch_size': args.batch_size
+            'batch_size': args.batch_size,
+            'alpha': args.alpha
         }
     }
     
@@ -174,7 +185,7 @@ def parse_arguments():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Evaluate a trained VAE model')
     parser.add_argument('--model-type', type=str, default='VAE',
-                      choices=['VAE', 'DeepCNNVAE'],
+                      choices=['VAE', 'DeepCNNVAE', 'BetaVAE'],
                       help='Type of VAE model to evaluate')
     parser.add_argument('--model-path', type=Path, required=True,
                       help='Path to the saved model weights')
@@ -191,6 +202,8 @@ def parse_arguments():
                       help='Number of latent channels')
     parser.add_argument('--batch-size', type=int, default=32,
                       help='Batch size for evaluation')
+    parser.add_argument('--beta', type=float, default=0.5,
+                      help='Beta skew for BetaVAE')
     return parser.parse_args()
 
 
