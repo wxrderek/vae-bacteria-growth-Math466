@@ -1,0 +1,13 @@
+{
+    "model_type": "VAE",
+    "model_path": "train_vae_output\\VAE_LD16_LR0.001_TS20250426_143003\\models\\best_model.pt",
+    "mse": 0.015918190324945108,
+    "timestamp": "2025-04-26T14:35:39.522534",
+    "parameters": {
+        "input_dim": 600,
+        "hidden_dim": 32,
+        "latent_dim": 16,
+        "latent_channel": 16,
+        "batch_size": 32
+    }
+}

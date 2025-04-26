@@ -120,7 +120,7 @@ def main():
         logger.info(f"Combined data shape after shuffling: {all_data.shape}")
         
         # Initialize simulation parameters
-        conditions = [(1e5, 1e5, 15e4, 0), (1e10, 1e5, 15e4, 2.5e5), (1e5, 1e10, 15e4, 2.5e5), (1e5, 1e5, 15e4, 5e5)]
+        conditions = [(1.5e5, 0.5e5, 5e4, 0), (1.5e5, 0.5e5, 5e4, 0.5e5), (1.5e5, 1e5, 5e4, 1e5), (1.5e5, 0.5e5, 5e4, 1.5e5)]
         
         # Load true and predicted parameters
         logger.info("Loading parameters...")

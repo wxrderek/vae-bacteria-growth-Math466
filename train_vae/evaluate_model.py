@@ -86,7 +86,7 @@ def load_data(data_directory, logger):
     return data, None
 
 
-def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq_length, alpha, logger):
+def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq_length, logger):
     """Initialize the specified model."""
     logger.info("Initializing %s model", model_type)
     model_classes = {
@@ -101,34 +101,39 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
         raise ValueError(f"Unknown model type: {model_type}")
     
     if model_type == 'VAE':
-        return VAE(
+        model = VAE(
             input_dim=input_dim,
             hidden_dim=hidden_dim,
             latent_dim=latent_dim
         )
+        return model
     elif model_type == 'DeepCNNVAE': 
-        return DeepCNNVAE(
+        model = DeepCNNVAE(
             latent_dim=latent_dim,
             latent_channel=latent_channel,
             seq_length=seq_length
         )
+        return model
     elif model_type == 'BetaVAE': 
-        return BetaVAE(
+        model = BetaVAE(
             latent_dim=latent_dim,
             latent_channel=latent_channel,
             seq_length=seq_length
         )
+        return model
     elif model_type == "InfoVAE":
-        return InfoVAE(
+        model = InfoVAE(
             latent_dim=latent_dim, 
             latent_channel=latent_channel,
             seq_length=seq_length
         )
+        return model
     elif model_type == "LadderVAE":
-        return InfoVAE(
+        model = LadderVAE(
             latent_dim=latent_dim, 
             seq_length=seq_length
         )
+        return model
 
 
 def evaluate_saved_model(args, logger):
@@ -153,10 +158,10 @@ def evaluate_saved_model(args, logger):
         args.model_type,
         args.input_dim,
         args.hidden_dim,
-        args.latent_dim,
-        args.latent_channel,
-        data.shape[2],
-        logger
+        latent_dim=16,
+        latent_channel=args.latent_channel,
+        seq_length=data.shape[2],
+        logger=logger
     )
     
     # Load model weights
@@ -218,7 +223,7 @@ def parse_arguments():
                       help='Dimension of input')
     parser.add_argument('--hidden-dim', type=int, default=32,
                       help='Dimension of hidden layers')
-    parser.add_argument('--latent-dim', type=int, default=12,
+    parser.add_argument('--latent-dim', type=int, default=16,
                       help='Dimension of latent space')
     parser.add_argument('--latent-channel', type=int, default=16,
                       help='Number of latent channels')
@@ -237,8 +242,9 @@ if __name__ == "__main__":
         args.model_type,
         args.input_dim,
         args.hidden_dim,
-        args.latent_dim,
-        args.latent_channel
+        latent_dim=16,
+        latent_channel=args.latent_channel,
+        params={'beta': 1e-4, 'alpha': 0.5, 'lambda_': 0.3}
     )
     
     # Set up logger

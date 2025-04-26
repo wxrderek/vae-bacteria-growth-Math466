@@ -28,7 +28,7 @@ def main(model_type='VAE'):
     if (model_type=='LadderVAE'):
         latent_dim = np.array([32, 16, 8])
     else: 
-        latent_dim = 12
+        latent_dim = 16
     params = {
         'beta': 1e-4, # beta VAE
         'alpha': 0.5, # info VAE
@@ -44,7 +44,7 @@ def main(model_type='VAE'):
     latent_channel = 16
     lr = 1e-3            
     min_lr = 4e-6 
-    epochs = 20
+    epochs = 300
     gamma = 0.98
     weight_decay = 1e-5
 
@@ -200,6 +200,22 @@ def main(model_type='VAE'):
     # plot loss curves
     plot_loss(train_loss_values, test_loss_values, output_dir)
     plot_kl(train_kl_loss_values, test_kl_loss_values, output_dir)
+
+    loss_output_dir = create_output_dir(
+        base_output_dir='loss_values',
+        model_type=model_type,
+        latent_dim=latent_dim,
+        latent_channel=latent_channel,
+        lr=lr, 
+        params=params
+    )
+    np.savez_compressed(
+        f'{loss_output_dir}/loss.npz', 
+        train = train_loss_values, 
+        test = test_loss_values, 
+        train_kl = train_kl_loss_values, 
+        test_kl = test_kl_loss_values
+    )
 
     # retrieve a subset of data for reconstruction plots
     percentage = 0.2

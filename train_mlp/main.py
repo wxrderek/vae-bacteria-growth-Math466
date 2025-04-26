@@ -54,7 +54,7 @@ def main(args):
     # common hyperparameters
     if (model_name=='LadderVAE'):
         latent_dim = [32, 16, 8]
-    else: latent_dim = 12
+    else: latent_dim = 16
     params = {
         'beta': 1e-4, # beta VAE
         'alpha': 0.5, # info VAE
@@ -77,7 +77,7 @@ def main(args):
 
     # mlp hyperparameters
     hidden_size = 128
-    warmup_epochs = 8
+    warmup_epochs = 4
     patience = 10
     percentage = 0.2
 
