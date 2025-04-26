@@ -28,7 +28,7 @@ def main(model_type='VAE'):
     if (model_type=='LadderVAE'):
         latent_dim = np.array([32, 16, 8])
     else: 
-        latent_dim = 16
+        latent_dim = 12
     params = {
         'beta': 1e-4, # beta VAE
         'alpha': 0.5, # info VAE

@@ -158,7 +158,7 @@ def evaluate_saved_model(args, logger):
         args.model_type,
         args.input_dim,
         args.hidden_dim,
-        latent_dim=16,
+        latent_dim=12,
         latent_channel=args.latent_channel,
         seq_length=data.shape[2],
         logger=logger
@@ -223,7 +223,7 @@ def parse_arguments():
                       help='Dimension of input')
     parser.add_argument('--hidden-dim', type=int, default=32,
                       help='Dimension of hidden layers')
-    parser.add_argument('--latent-dim', type=int, default=16,
+    parser.add_argument('--latent-dim', type=int, default=12,
                       help='Dimension of latent space')
     parser.add_argument('--latent-channel', type=int, default=16,
                       help='Number of latent channels')
@@ -242,7 +242,7 @@ if __name__ == "__main__":
         args.model_type,
         args.input_dim,
         args.hidden_dim,
-        latent_dim=16,
+        latent_dim=12,
         latent_channel=args.latent_channel,
         params={'beta': 1e-4, 'alpha': 0.5, 'lambda_': 0.3}
     )

@@ -54,7 +54,7 @@ def main(args):
     # common hyperparameters
     if (model_name=='LadderVAE'):
         latent_dim = [32, 16, 8]
-    else: latent_dim = 16
+    else: latent_dim = 12
     params = {
         'beta': 1e-4, # beta VAE
         'alpha': 0.5, # info VAE
@@ -223,7 +223,7 @@ def main(args):
         train_pred = combined_model(X_train[:sample_size].to(device)).cpu().numpy() * parameter_scale
         test_pred = combined_model(X_test[:sample_size].to(device)).cpu().numpy() * parameter_scale
 
-        squeeze = True if (train_pred.shape != (256, 12)) else False
+        squeeze = True if (train_pred.shape != (320, 12)) else False
     
     if (squeeze): 
         train_pred = np.squeeze(train_pred, axis=1)
