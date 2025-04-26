@@ -2,10 +2,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from .base_vae import BaseVAE
 
-class BetaEncoder(nn.Module):
+class InfoEncoder(nn.Module):
     """Beta Encoder for VAE"""
     def __init__(self, latent_dim, latent_channel, seq_length):
-        super(BetaEncoder, self).__init__()
+        super(InfoEncoder, self).__init__()
         self.latent_dim = latent_dim
         self.latent_channel = latent_channel
         self.seq_length = seq_length
@@ -34,10 +34,10 @@ class BetaEncoder(nn.Module):
         logvar = self.fc_logvar(x)
         return mean, logvar
 
-class BetaDecoder(nn.Module):
+class InfoDecoder(nn.Module):
     """Beta Decoder for VAE"""
     def __init__(self, latent_dim, latent_channel, seq_length):
-        super(BetaDecoder, self).__init__()
+        super(InfoDecoder, self).__init__()
         self.latent_dim = latent_dim
         self.latent_channel = latent_channel
         self.seq_length = seq_length
@@ -64,12 +64,12 @@ class BetaDecoder(nn.Module):
         x = self.decoder(x)
         return x
 
-class BetaVAE(BaseVAE):
+class InfoVAE(BaseVAE):
     """Alpha Variational Autoencoder using CNN architecture"""
     def __init__(self, latent_dim, latent_channel, seq_length):
-        super(BetaVAE, self).__init__(latent_dim, latent_channel, seq_length)
-        self.encoder = BetaEncoder(latent_dim, latent_channel, seq_length)
-        self.decoder = BetaDecoder(latent_dim, latent_channel, seq_length)
+        super(InfoVAE, self).__init__(latent_dim, latent_channel, seq_length)
+        self.encoder = InfoEncoder(latent_dim, latent_channel, seq_length)
+        self.decoder = InfoDecoder(latent_dim, latent_channel, seq_length)
 
     def forward(self, x):
         mean, logvar = self.encoder(x)

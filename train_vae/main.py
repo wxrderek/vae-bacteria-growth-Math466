@@ -15,6 +15,7 @@ from plotting import plot_loss, plot_kl, plot_reconstructions, plot_sample_traje
 from models.shallow_vae import VAE
 from models.deep_cnn_vae import DeepCNNVAE
 from models.beta_vae import BetaVAE
+from models.info_vae import InfoVAE
 
 
 def main(model_type='VAE'):
@@ -24,7 +25,11 @@ def main(model_type='VAE'):
 
     # common hyperparameters
     latent_dim = 12
-    params = {'beta': 1e-4}
+    params = {
+        'beta': 1e-4, # beta VAE
+        'alpha': 0.5, # info VAE
+        'lambda_': 0.3 # info VAE
+    }
 
     # hyperparameters for linear
     input_dim = 600
@@ -35,7 +40,7 @@ def main(model_type='VAE'):
     latent_channel = 16
     lr = 1e-3            
     min_lr = 4e-6 
-    epochs = 1000
+    epochs = 20
     gamma = 0.98
     weight_decay = 1e-5
 
@@ -98,6 +103,8 @@ def main(model_type='VAE'):
         model = DeepCNNVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
     elif model_type == 'BetaVAE':
         model = BetaVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
+    elif model_type == 'InfoVAE':
+        model = InfoVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
     else:
         raise ValueError(f"Unknown model type: {model_type}")
 
@@ -206,7 +213,7 @@ def main(model_type='VAE'):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train VAE Models')
     parser.add_argument('--model', type=str, default='VAE',
-                        choices=['VAE', 'DeepCNNVAE', 'BetaVAE'],
+                        choices=['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE'],
                         help='Specify which VAE architecture to use')
     args = parser.parse_args()
 

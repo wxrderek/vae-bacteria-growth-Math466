@@ -12,6 +12,7 @@ from pathlib import Path
 from models.shallow_vae import VAE
 from models.deep_cnn_vae import DeepCNNVAE
 from models.beta_vae import BetaVAE
+from models.info_vae import InfoVAE
 from training import calculate_mse
 from data_loading import load_simulated_data
 
@@ -80,7 +81,8 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
     model_classes = {
         'VAE': VAE,
         'DeepCNNVAE': DeepCNNVAE,
-        'BetaVAE': BetaVAE
+        'BetaVAE': BetaVAE,
+        'InfoVAE': InfoVAE
     }
     
     if model_type not in model_classes:
@@ -101,6 +103,12 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
     elif model_type == 'BetaVAE': 
         return BetaVAE(
             latent_dim=latent_dim,
+            latent_channel=latent_channel,
+            seq_length=seq_length
+        )
+    elif model_type == "InfoVAE":
+        return InfoVAE(
+            latent_dim=latent_dim, 
             latent_channel=latent_channel,
             seq_length=seq_length
         )
@@ -149,7 +157,7 @@ def evaluate_saved_model(args, logger):
     # Log reconstructions for a small batch
     with torch.no_grad():
         sample_batch = next(iter(test_loader)).to(device)
-        reconstruction, _, _, _ = model(sample_batch)
+        reconstruction, _, _, z = model(sample_batch)
         sample_mse = torch.mean((reconstruction - sample_batch) ** 2).item()
         logger.info(f"Sample batch MSE: {sample_mse:.7f}")
         logger.info(f"Sample input range: [{sample_batch.min():.4f}, {sample_batch.max():.4f}]")
@@ -182,7 +190,7 @@ def parse_arguments():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Evaluate a trained VAE model')
     parser.add_argument('--model-type', type=str, default='VAE',
-                      choices=['VAE', 'DeepCNNVAE', 'BetaVAE'],
+                      choices=['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE'],
                       help='Type of VAE model to evaluate')
     parser.add_argument('--model-path', type=Path, required=True,
                       help='Path to the saved model weights')
@@ -213,7 +221,7 @@ if __name__ == "__main__":
         args.input_dim,
         args.hidden_dim,
         args.latent_dim,
-        args.latent_channel,
+        args.latent_channel
     )
     
     # Set up logger

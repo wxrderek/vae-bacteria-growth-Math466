@@ -33,7 +33,7 @@ def main(args):
 
     # common hyperparameters
     latent_dim = 12
-    alpha = 0.5 # for AlphaVAE
+    params = {'beta': 1e-4}
 
     # hyperparameters for linear
     input_dim = 600
@@ -63,15 +63,19 @@ def main(args):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # Detect distribution type from data file path
-    distribution_type = 'truncnorm'
-    
+
     model_name = (
         'VAE' if args.model == 'VAE' else
         'DeepCNNVAE' if args.model == 'DeepCNNVAE' else
         'BetaVAE'
     )
-    
-    output_dir = f'train_vae_mlp_output/{model_name}_LD{latent_dim}_LC{latent_channel}_LR{lr}_DIST{distribution_type}_TS{timestamp}'
+
+    if (model_name=='VAE'):
+        output_dir = f'train_vae_mlp_output/{model_name}_LD{latent_dim}_LR{lr}_TS{timestamp}'
+    elif (model_name=="BetaVAE"):
+        output_dir = f'train_vae_mlp_output/{model_name}_BETA_{params['beta']}_LD{latent_dim}_LR{lr}_TS{timestamp}'
+    else: 
+        output_dir = f'train_vae_mlp_output/{model_name}_LD{latent_dim}_LC{latent_channel}_LR{lr}_TS{timestamp}'
     
     # Create directory structure
     plots_dir = os.path.join(output_dir, 'plots')

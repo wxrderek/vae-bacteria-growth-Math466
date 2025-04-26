@@ -81,4 +81,4 @@ class DeepCNNVAE(BaseVAE):
         mean, logvar = self.encoder(x)
         z = self.reparameterize(mean, logvar)
         reconstruction = self.decoder(z)
-        return reconstruction, mean, logvar
+        return reconstruction, mean, logvar, z

@@ -1,7 +1,7 @@
 import torch
 from sklearn.metrics import r2_score
 
-from loss_functions import vae_loss, beta_vae_loss
+from loss_functions import vae_loss, beta_vae_loss, mmd_loss
 
 def count_parameters(model):
     """Count the number of trainable parameters in the model."""
@@ -19,6 +19,10 @@ def train_epoch(model, model_type, dataloader, optimizer, criterion, device, par
 
         if (model_type=='BetaVAE'):
             loss, kl_loss = beta_vae_loss(model, data, criterion, params['beta'])
+        elif (model_type=='InfoVAE'):
+            true_samples = torch.randn(model.seq_length, model.latent_dim)
+            true_samples = true_samples.to(device)
+            loss, kl_loss, mmd = mmd_loss(model, data, criterion, true_samples, params['alpha'], params['lambda_'])
         else:
             loss, kl_loss = vae_loss(model, data, criterion)
 
@@ -43,6 +47,10 @@ def evaluate(model, model_type, dataloader, criterion, device, params):
 
             if (model_type=='BetaVAE'):
                 loss, kl_loss = beta_vae_loss(model, data, criterion, params['beta'])
+            elif (model_type=='InfoVAE'):
+                true_samples = torch.randn(model.seq_length, model.latent_dim)
+                true_samples = true_samples.to(device)
+                loss, kl_loss, mmd = mmd_loss(model, data, criterion, true_samples, params['alpha'], params['lambda_'])
             else:
                 loss, kl_loss = vae_loss(model, data, criterion)
 
@@ -60,7 +68,7 @@ def get_latent_variables(model, dataloader, device):
     with torch.no_grad():
         for data in dataloader:
             data = data.to(device)
-            _, mean, _ = model(data)
+            _, mean, _, z = model(data)
             all_latent_vars.append(mean.detach().cpu())
     return torch.cat(all_latent_vars)
 
@@ -72,7 +80,7 @@ def calculate_mse(model, dataloader, device):
     with torch.no_grad():
         for data in dataloader:
             data = data.to(device)
-            reconstruction, _, _ = model(data)
+            reconstruction, _, _, z = model(data)
             mse = torch.mean((reconstruction - data) ** 2).item()
             mse_values.append(mse)
     avg_mse = sum(mse_values) / len(mse_values)
