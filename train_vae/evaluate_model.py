@@ -102,8 +102,7 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
         return BetaVAE(
             latent_dim=latent_dim,
             latent_channel=latent_channel,
-            seq_length=seq_length,
-            alpha=alpha
+            seq_length=seq_length
         )
 
 
@@ -132,7 +131,6 @@ def evaluate_saved_model(args, logger):
         args.latent_dim,
         args.latent_channel,
         data.shape[2],
-        args.alpha,
         logger
     )
     
@@ -170,8 +168,7 @@ def evaluate_saved_model(args, logger):
             'hidden_dim': args.hidden_dim,
             'latent_dim': args.latent_dim,
             'latent_channel': args.latent_channel,
-            'batch_size': args.batch_size,
-            'alpha': args.alpha
+            'batch_size': args.batch_size
         }
     }
     
@@ -202,8 +199,6 @@ def parse_arguments():
                       help='Number of latent channels')
     parser.add_argument('--batch-size', type=int, default=32,
                       help='Batch size for evaluation')
-    parser.add_argument('--alpha', type=float, default=1,
-                      help='Beta skew for BetaVAE')
     return parser.parse_args()
 
 
@@ -219,7 +214,6 @@ if __name__ == "__main__":
         args.hidden_dim,
         args.latent_dim,
         args.latent_channel,
-        args.alpha
     )
     
     # Set up logger

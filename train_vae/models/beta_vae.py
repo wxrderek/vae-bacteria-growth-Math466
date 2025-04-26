@@ -66,14 +66,13 @@ class BetaDecoder(nn.Module):
 
 class BetaVAE(BaseVAE):
     """Alpha Variational Autoencoder using CNN architecture"""
-    def __init__(self, latent_dim, latent_channel, seq_length, alpha):
+    def __init__(self, latent_dim, latent_channel, seq_length):
         super(BetaVAE, self).__init__(latent_dim, latent_channel, seq_length)
         self.encoder = BetaEncoder(latent_dim, latent_channel, seq_length)
         self.decoder = BetaDecoder(latent_dim, latent_channel, seq_length)
-        self.alpha = alpha
 
     def forward(self, x):
         mean, logvar = self.encoder(x)
         z = self.reparameterize(mean, logvar)
         reconstruction = self.decoder(z)
-        return reconstruction, mean, logvar, self.alpha
+        return reconstruction, mean, logvar

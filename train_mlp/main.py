@@ -117,7 +117,7 @@ def main(args):
     elif args.model == 'DeepCNNVAE':
         vae_model = DeepCNNVAE(latent_dim, latent_channel, input_size).to(device)
     elif args.model == 'BetaVAE':
-        vae_model = BetaVAE(latent_dim, latent_channel, input_size, alpha=alpha).to(device)
+        vae_model = BetaVAE(latent_dim, latent_channel, input_size).to(device)
    
     logging.info(f'{model_name} model instantiated.')
 
@@ -199,9 +199,12 @@ def main(args):
     with torch.no_grad():
         train_pred = combined_model(X_train[:sample_size].to(device)).cpu().numpy() * parameter_scale
         test_pred = combined_model(X_test[:sample_size].to(device)).cpu().numpy() * parameter_scale
+
+        squeeze = True if (train_pred.shape != (256, 12)) else False
     
-    train_pred = np.squeeze(train_pred, axis=1)
-    test_pred = np.squeeze(test_pred, axis=1)
+    if (squeeze): 
+        train_pred = np.squeeze(train_pred, axis=1)
+        test_pred = np.squeeze(test_pred, axis=1)
     
     plot_parameter_predictions(
         y_train[:sample_size].numpy() * parameter_scale,
@@ -215,8 +218,12 @@ def main(args):
     # Save full predictions
     with torch.no_grad():
         full_preds = np.zeros_like(normalized_parameters) * parameter_scale
-        full_preds[train_indices] = np.squeeze(combined_model(X_train.to(device)).cpu().numpy() * parameter_scale, axis=1)
-        full_preds[test_indices] = np.squeeze(combined_model(X_test.to(device)).cpu().numpy() * parameter_scale, axis=1)
+        if (squeeze):
+            full_preds[train_indices] = np.squeeze(combined_model(X_train.to(device)).cpu().numpy() * parameter_scale, axis=1)
+            full_preds[test_indices] = np.squeeze(combined_model(X_test.to(device)).cpu().numpy() * parameter_scale, axis=1)
+        else:
+            full_preds[train_indices] = combined_model(X_train.to(device)).cpu().numpy() * parameter_scale
+            full_preds[test_indices] = combined_model(X_test.to(device)).cpu().numpy() * parameter_scale
     
     save_predictions(full_preds, predictions_save_path)
 
@@ -225,7 +232,7 @@ if __name__ == '__main__':
     
     # Model configuration
     parser.add_argument('--model', type=str, default='VAE',
-                       choices=['VAE', 'DeepCNNVAE, BetaVAE'],
+                       choices=['VAE', 'DeepCNNVAE', 'BetaVAE'],
                        help='Choice of VAE architecture')
     
     # Data paths

@@ -17,15 +17,14 @@ from models.deep_cnn_vae import DeepCNNVAE
 from models.beta_vae import BetaVAE
 
 
-def main(model_type='VAE', distribution_type='truncnorm'):
+def main(model_type='VAE'):
     # setup logging
     logger = setup_logging()
     logger.info(f"Model type received: {model_type}")
-    logger.info(f"Distribution type received: {distribution_type}")
 
     # common hyperparameters
     latent_dim = 12
-    alpha = 0.01 # for BetaVAE
+    params = {'beta': 1e-4}
 
     # hyperparameters for linear
     input_dim = 600
@@ -50,8 +49,8 @@ def main(model_type='VAE', distribution_type='truncnorm'):
         model_type=model_type,
         latent_dim=latent_dim,
         latent_channel=latent_channel,
-        lr=lr,
-        distribution_type=distribution_type
+        lr=lr, 
+        params=params
     )
 
     # Additionally, set up a subdirectory for models
@@ -98,7 +97,7 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     elif model_type == 'DeepCNNVAE':
         model = DeepCNNVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
     elif model_type == 'BetaVAE':
-        model = BetaVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length, alpha=alpha)
+        model = BetaVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
     else:
         raise ValueError(f"Unknown model type: {model_type}")
 
@@ -130,9 +129,9 @@ def main(model_type='VAE', distribution_type='truncnorm'):
     logger.info("Starting training loop...")
     for epoch in range(epochs):
         # train for one epoch
-        train_loss, train_kl_loss = train_epoch(model, model_type, train_loader, optimizer, criterion, device)
+        train_loss, train_kl_loss = train_epoch(model, model_type, train_loader, optimizer, criterion, device, params)
         # evaluate on test set
-        test_loss, test_kl_loss = evaluate(model, model_type, test_loader, criterion, device)
+        test_loss, test_kl_loss = evaluate(model, model_type, test_loader, criterion, device, params)
 
         # record losses
         train_loss_values.append(train_loss)

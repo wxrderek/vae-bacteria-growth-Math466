@@ -1,11 +1,13 @@
 import torch
 from sklearn.metrics import r2_score
 
+from loss_functions import vae_loss, beta_vae_loss
+
 def count_parameters(model):
     """Count the number of trainable parameters in the model."""
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-def train_epoch(model, model_type, dataloader, optimizer, criterion, device):
+def train_epoch(model, model_type, dataloader, optimizer, criterion, device, params):
     """Training loop for one epoch."""
     model.train()
 
@@ -16,15 +18,9 @@ def train_epoch(model, model_type, dataloader, optimizer, criterion, device):
         optimizer.zero_grad()
 
         if (model_type=='BetaVAE'):
-            reconstruction, mean, logvar, alpha = model(data)
-            recon_loss = criterion(reconstruction, data)
-            kl_loss = -0.5 * torch.mean(1 + logvar - mean.pow(2) - logvar.exp())
-            loss = recon_loss + alpha * kl_loss
+            loss, kl_loss = beta_vae_loss(model, data, criterion, params['beta'])
         else:
-            reconstruction, mean, logvar = model(data)
-            recon_loss = criterion(reconstruction, data)
-            kl_loss = -0.5 * torch.mean(1 + logvar - mean.pow(2) - logvar.exp())
-            loss = recon_loss + kl_loss
+            loss, kl_loss = vae_loss(model, data, criterion)
 
         loss.backward()
         optimizer.step()
@@ -36,7 +32,7 @@ def train_epoch(model, model_type, dataloader, optimizer, criterion, device):
     epoch_kl = running_kl_div / len(dataloader.dataset)
     return epoch_loss, epoch_kl
 
-def evaluate(model, model_type, dataloader, criterion, device):
+def evaluate(model, model_type, dataloader, criterion, device, params):
     """Validation loop."""
     model.eval()
     running_loss = 0
@@ -45,12 +41,10 @@ def evaluate(model, model_type, dataloader, criterion, device):
         for data in dataloader:
             data = data.to(device)
 
-            if (model_type=="BetaVAE"): reconstruction, mean, logvar, _ = model(data)
-            else: reconstruction, mean, logvar = model(data)
-
-            recon_loss = criterion(reconstruction, data)
-            kl_loss = -0.5 * torch.mean(1 + logvar - mean.pow(2) - logvar.exp())
-            loss = recon_loss + kl_loss
+            if (model_type=='BetaVAE'):
+                loss, kl_loss = beta_vae_loss(model, data, criterion, params['beta'])
+            else:
+                loss, kl_loss = vae_loss(model, data, criterion)
 
             running_loss += loss.item() * data.size(0)
             running_kl_div += kl_loss.item() * data.size(0)
@@ -66,7 +60,7 @@ def get_latent_variables(model, dataloader, device):
     with torch.no_grad():
         for data in dataloader:
             data = data.to(device)
-            _, mean, _, _ = model(data)
+            _, mean, _ = model(data)
             all_latent_vars.append(mean.detach().cpu())
     return torch.cat(all_latent_vars)
 
@@ -78,7 +72,7 @@ def calculate_mse(model, dataloader, device):
     with torch.no_grad():
         for data in dataloader:
             data = data.to(device)
-            reconstruction, _, _, _ = model(data)
+            reconstruction, _, _ = model(data)
             mse = torch.mean((reconstruction - data) ** 2).item()
             mse_values.append(mse)
     avg_mse = sum(mse_values) / len(mse_values)
