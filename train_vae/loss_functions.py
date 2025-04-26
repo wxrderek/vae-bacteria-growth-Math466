@@ -47,6 +47,18 @@ def mmd_loss(model, data, criterion, true_samples, alpha, lambda_):
     loss = recon_loss + (1 - alpha) * kl_loss - (alpha + lambda_ - 1) * mmd
     return loss, kl_loss, mmd
 
+# ladder vae objective
+def ladder_loss(model, data, criterion, beta):
+    reconstruction, means, logvars, zs = model(data)
+    recon_loss = criterion(reconstruction, data)
+
+    kl_loss = 0
+    for mean, logvar in zip(means, logvars):
+        kl = -0.5 * torch.sum(1 + logvar - mean.pow(2) - logvar.exp())
+        kl_loss += kl
+    
+    loss = recon_loss + beta * kl_loss
+    return loss, kl_loss
 
 
 

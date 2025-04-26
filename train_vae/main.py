@@ -16,6 +16,7 @@ from models.shallow_vae import VAE
 from models.deep_cnn_vae import DeepCNNVAE
 from models.beta_vae import BetaVAE
 from models.info_vae import InfoVAE
+from models.ladder_vae import LadderVAE
 
 
 def main(model_type='VAE'):
@@ -24,7 +25,10 @@ def main(model_type='VAE'):
     logger.info(f"Model type received: {model_type}")
 
     # common hyperparameters
-    latent_dim = 12
+    if (model_type=='LadderVAE'):
+        latent_dim = np.array([32, 16, 8])
+    else: 
+        latent_dim = 12
     params = {
         'beta': 1e-4, # beta VAE
         'alpha': 0.5, # info VAE
@@ -105,6 +109,8 @@ def main(model_type='VAE'):
         model = BetaVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
     elif model_type == 'InfoVAE':
         model = InfoVAE(latent_dim=latent_dim, latent_channel=latent_channel, seq_length=seq_length)
+    elif model_type == 'LadderVAE':
+        model = LadderVAE(latent_dims=latent_dim, seq_length=seq_length)
     else:
         raise ValueError(f"Unknown model type: {model_type}")
 
@@ -213,7 +219,7 @@ def main(model_type='VAE'):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train VAE Models')
     parser.add_argument('--model', type=str, default='VAE',
-                        choices=['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE'],
+                        choices=['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE', 'LadderVAE'],
                         help='Specify which VAE architecture to use')
     args = parser.parse_args()
 

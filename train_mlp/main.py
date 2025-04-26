@@ -19,6 +19,8 @@ if parent_dir not in sys.path:
 from train_vae.models.shallow_vae import VAE
 from train_vae.models.deep_cnn_vae import DeepCNNVAE
 from train_vae.models.beta_vae import BetaVAE
+from train_vae.models.info_vae import InfoVAE
+from train_vae.models.ladder_vae import LadderVAE
 
 import argparse
 from datetime import datetime
@@ -31,9 +33,34 @@ def main(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logging.info(f'Using device: {device}')
 
+    # Validate model choice
+    valid_models = ['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE', 'LadderVAE']
+    if args.model not in valid_models:
+        raise ValueError(f"Invalid model choice '{args.model}'. Valid options are: {valid_models}")
+    
+    # File paths configuration
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Detect distribution type from data file path
+
+    model_name = (
+        'VAE' if args.model == 'VAE' else
+        'DeepCNNVAE' if args.model == 'DeepCNNVAE' else
+        'BetaVAE' if args.model == 'BetaVAE' else
+        'InfoVAE' if args.model == 'InfoVAE' else
+        'LadderVAE'
+    )
+
     # common hyperparameters
-    latent_dim = 12
-    params = {'beta': 1e-4}
+    if (model_name=='LadderVAE'):
+        latent_dim = [32, 16, 8]
+    else: latent_dim = 12
+    params = {
+        'beta': 1e-4, # beta VAE
+        'alpha': 0.5, # info VAE
+        'lambda_': 0.3 # info VAE
+    }
+
 
     # hyperparameters for linear
     input_dim = 600
@@ -54,25 +81,13 @@ def main(args):
     patience = 10
     percentage = 0.2
 
-    # Validate model choice
-    valid_models = ['VAE', 'DeepCNNVAE', 'BetaVAE']
-    if args.model not in valid_models:
-        raise ValueError(f"Invalid model choice '{args.model}'. Valid options are: {valid_models}")
-    
-    # File paths configuration
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
-    # Detect distribution type from data file path
-
-    model_name = (
-        'VAE' if args.model == 'VAE' else
-        'DeepCNNVAE' if args.model == 'DeepCNNVAE' else
-        'BetaVAE'
-    )
-
     if (model_name=='VAE'):
         output_dir = f'train_vae_mlp_output/{model_name}_LD{latent_dim}_LR{lr}_TS{timestamp}'
     elif (model_name=="BetaVAE"):
+        output_dir = f'train_vae_mlp_output/{model_name}_BETA_{params['beta']}_LD{latent_dim}_LR{lr}_TS{timestamp}'
+    elif (model_name=='InfoVAE'):
+        output_dir = f'train_vae_mlp_output/{model_name}_ALPHA{params['alpha']}_LAMBDA_{params['lambda_']}_LD{latent_dim}_LR{lr}_TS{timestamp}'
+    elif (model_name=='LadderVAE'):
         output_dir = f'train_vae_mlp_output/{model_name}_BETA_{params['beta']}_LD{latent_dim}_LR{lr}_TS{timestamp}'
     else: 
         output_dir = f'train_vae_mlp_output/{model_name}_LD{latent_dim}_LC{latent_channel}_LR{lr}_TS{timestamp}'
@@ -122,6 +137,10 @@ def main(args):
         vae_model = DeepCNNVAE(latent_dim, latent_channel, input_size).to(device)
     elif args.model == 'BetaVAE':
         vae_model = BetaVAE(latent_dim, latent_channel, input_size).to(device)
+    elif args.model == 'InfoVAE':
+        vae_model = InfoVAE(latent_dim, latent_channel, input_size).to(device)
+    elif args.model == 'LadderVAE':
+        vae_model = LadderVAE(latent_dim, input_size)
    
     logging.info(f'{model_name} model instantiated.')
 

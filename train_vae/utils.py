@@ -32,6 +32,8 @@ def create_output_dir(base_output_dir, model_type, latent_dim, latent_channel, l
         dir_name = f"{model_type}_BETA{params['beta']}_LD{latent_dim}_LC{latent_channel}_LR{lr}_TS{timestamp}"
     elif (model_type=='InfoVAE'):
         dir_name = f"{model_type}_ALPHA{params['alpha']}_LAMBDA_{params['lambda_']}_LD{latent_dim}_LC{latent_channel}_LR{lr}_TS{timestamp}"
+    elif (model_type=="LadderVAE"):
+        dir_name = f"{model_type}_BETA{params['beta']}_LD{latent_dim}_LC{latent_channel}_LR{lr}_TS{timestamp}"
     else: dir_name = f"{model_type}_LD{latent_dim}_LC{latent_channel}_LR{lr}_TS{timestamp}"
     
     # Create the full path

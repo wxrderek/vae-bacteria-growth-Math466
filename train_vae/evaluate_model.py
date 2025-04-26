@@ -13,14 +13,25 @@ from models.shallow_vae import VAE
 from models.deep_cnn_vae import DeepCNNVAE
 from models.beta_vae import BetaVAE
 from models.info_vae import InfoVAE
+from models.ladder_vae import LadderVAE
 from training import calculate_mse
 from data_loading import load_simulated_data
 
 
-def create_output_dir(base_dir, model_type, input_dim, hidden_dim, latent_dim, latent_channel, alpha):
+def create_output_dir(base_dir, model_type, input_dim, hidden_dim, latent_dim, latent_channel, params):
     """Create a unique output directory based on model configuration and timestamp."""
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    dir_name = f"{model_type}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}_APH{alpha}"
+
+    if (model_type=='VAE'):
+        dir_name = f"{model_type}_LD{latent_dim}_TS{timestamp}"
+    elif (model_type=='BetaVAE'):
+        dir_name = f"{model_type}_BETA{params['beta']}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}"
+    elif (model_type=='InfoVAE'):
+        dir_name = f"{model_type}_ALPHA{params['alpha']}_LAMBDA_{params['lambda_']}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}"
+    elif (model_type=="LadderVAE"):
+        dir_name = f"{model_type}_BETA{params['beta']}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}"
+    else: dir_name = f"{model_type}_LD{latent_dim}_LC{latent_channel}_TS{timestamp}"
+
     output_dir = Path(base_dir) / dir_name
     output_dir.mkdir(parents=True, exist_ok=True)
     return output_dir
@@ -82,7 +93,8 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
         'VAE': VAE,
         'DeepCNNVAE': DeepCNNVAE,
         'BetaVAE': BetaVAE,
-        'InfoVAE': InfoVAE
+        'InfoVAE': InfoVAE, 
+        'LadderVAE': LadderVAE
     }
     
     if model_type not in model_classes:
@@ -110,6 +122,11 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
         return InfoVAE(
             latent_dim=latent_dim, 
             latent_channel=latent_channel,
+            seq_length=seq_length
+        )
+    elif model_type == "LadderVAE":
+        return InfoVAE(
+            latent_dim=latent_dim, 
             seq_length=seq_length
         )
 
