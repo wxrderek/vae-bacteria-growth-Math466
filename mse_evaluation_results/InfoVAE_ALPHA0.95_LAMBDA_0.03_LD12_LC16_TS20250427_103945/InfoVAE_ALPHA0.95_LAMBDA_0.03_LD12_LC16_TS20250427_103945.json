@@ -1,0 +1,13 @@
+{
+    "model_type": "InfoVAE",
+    "model_path": "train_vae_output\\InfoVAE_ALPHA0.95_LAMBDA_0.03_LD12_LC16_LR0.001_TS20250427_002231\\models\\best_model.pt",
+    "mse": 0.0019055964824344432,
+    "timestamp": "2025-04-27T10:39:50.382209",
+    "parameters": {
+        "input_dim": 600,
+        "hidden_dim": 32,
+        "latent_dim": 12,
+        "latent_channel": 16,
+        "batch_size": 32
+    }
+}

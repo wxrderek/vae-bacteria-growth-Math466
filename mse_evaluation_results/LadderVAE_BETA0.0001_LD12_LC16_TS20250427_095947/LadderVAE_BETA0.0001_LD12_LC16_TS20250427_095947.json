@@ -1,0 +1,13 @@
+{
+    "model_type": "LadderVAE",
+    "model_path": "train_vae_output\\LadderVAE_BETA0.0001_LD8_LC16_LR0.001_TS20250427_090948\\models\\best_model.pt",
+    "mse": 0.005417529959231615,
+    "timestamp": "2025-04-27T09:59:49.699277",
+    "parameters": {
+        "input_dim": 600,
+        "hidden_dim": 32,
+        "latent_dim": 12,
+        "latent_channel": 16,
+        "batch_size": 32
+    }
+}

@@ -56,8 +56,8 @@ def main(args):
         latent_dim = [32, 16, 8]
     else: latent_dim = 12
     params = {
-        'beta': 1, # beta VAE
-        'alpha': 0.9, # info VAE
+        'beta': 0.0001, # beta VAE
+        'alpha': 0.3, # info VAE
         'lambda_': 10 # info VAE
     }
 
@@ -255,7 +255,7 @@ if __name__ == '__main__':
     
     # Model configuration
     parser.add_argument('--model', type=str, default='VAE',
-                       choices=['VAE', 'DeepCNNVAE', 'BetaVAE'],
+                       choices=['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE', 'LadderVAE'],
                        help='Choice of VAE architecture')
     
     # Data paths

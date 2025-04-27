@@ -57,7 +57,7 @@ def ladder_loss(model, data, criterion, beta):
         kl = -0.5 * torch.sum(1 + logvar - mean.pow(2) - logvar.exp())
         kl_loss += kl
     
-    loss = recon_loss + beta * kl_loss
+    loss = recon_loss + beta * torch.mean(kl_loss)
     return loss, kl_loss
 
 

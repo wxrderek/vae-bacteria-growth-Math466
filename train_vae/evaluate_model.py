@@ -130,7 +130,7 @@ def get_model(model_type, input_dim, hidden_dim, latent_dim, latent_channel, seq
         return model
     elif model_type == "LadderVAE":
         model = LadderVAE(
-            latent_dim=latent_dim, 
+            latent_dims=latent_dim, 
             seq_length=seq_length
         )
         return model
@@ -212,7 +212,7 @@ def parse_arguments():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Evaluate a trained VAE model')
     parser.add_argument('--model-type', type=str, default='VAE',
-                      choices=['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE'],
+                      choices=['VAE', 'DeepCNNVAE', 'BetaVAE', 'InfoVAE', 'LadderVAE'],
                       help='Type of VAE model to evaluate')
     parser.add_argument('--model-path', type=Path, required=True,
                       help='Path to the saved model weights')
@@ -244,7 +244,7 @@ if __name__ == "__main__":
         args.hidden_dim,
         latent_dim=12,
         latent_channel=args.latent_channel,
-        params={'beta': 1, 'alpha': 0.9, 'lambda_': 10}
+        params={'beta': 0.0001, 'alpha': 0.3, 'lambda_': 10}
     )
     
     # Set up logger
