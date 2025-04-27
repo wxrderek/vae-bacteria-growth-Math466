@@ -6,8 +6,8 @@ import torch
 
 def plot_loss(train_losses, test_losses, output_dir):
     plt.figure(figsize=(6, 3))
-    plt.semilogy(train_losses, label=f'Training-Min. Loss: {np.min(train_losses):.6f}')
-    plt.semilogy(test_losses, label=f'Testing-Min. Loss: {np.min(test_losses):.6f}')
+    plt.semilogy(np.abs(train_losses), label=f'Training-Min. Loss: {np.min(np.abs(train_losses)):.6f}')
+    plt.semilogy(np.abs(test_losses), label=f'Testing-Min. Loss: {np.min(np.abs(test_losses)):.6f}')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
@@ -18,8 +18,8 @@ def plot_loss(train_losses, test_losses, output_dir):
 
 def plot_kl(train_kl_losses, test_kl_losses, output_dir):
     plt.figure(figsize=(6, 3))
-    plt.semilogy(train_kl_losses, label='Training KL Divergence Loss')
-    plt.semilogy(test_kl_losses, label='Testing KL Divergence Loss')
+    plt.semilogy(np.abs(train_kl_losses), label='Training KL Divergence Loss')
+    plt.semilogy(np.abs(test_kl_losses), label='Testing KL Divergence Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()

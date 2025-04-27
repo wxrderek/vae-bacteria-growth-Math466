@@ -56,9 +56,9 @@ def main(args):
         latent_dim = [32, 16, 8]
     else: latent_dim = 12
     params = {
-        'beta': 0.0001, # beta VAE
-        'alpha': 0.5, # info VAE
-        'lambda_': 0.3 # info VAE
+        'beta': 1, # beta VAE
+        'alpha': 0.9, # info VAE
+        'lambda_': 10 # info VAE
     }
 
 

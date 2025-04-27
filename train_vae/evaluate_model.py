@@ -244,7 +244,7 @@ if __name__ == "__main__":
         args.hidden_dim,
         latent_dim=12,
         latent_channel=args.latent_channel,
-        params={'beta': 0.0001, 'alpha': 0.5, 'lambda_': 0.3}
+        params={'beta': 1, 'alpha': 0.9, 'lambda_': 10}
     )
     
     # Set up logger
