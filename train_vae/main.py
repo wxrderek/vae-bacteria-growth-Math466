@@ -30,7 +30,7 @@ def main(model_type='VAE'):
     else: 
         latent_dim = 12
     params = {
-        'beta': 1e-4, # beta VAE
+        'beta': 0.0001, # beta VAE
         'alpha': 0.5, # info VAE
         'lambda_': 0.3 # info VAE
     }
@@ -44,7 +44,7 @@ def main(model_type='VAE'):
     latent_channel = 16
     lr = 1e-3            
     min_lr = 4e-6 
-    epochs = 300
+    epochs = 500
     gamma = 0.98
     weight_decay = 1e-5
 

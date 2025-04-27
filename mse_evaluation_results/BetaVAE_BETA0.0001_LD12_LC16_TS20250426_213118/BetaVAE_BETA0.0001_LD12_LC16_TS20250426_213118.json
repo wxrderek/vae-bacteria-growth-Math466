@@ -1,0 +1,13 @@
+{
+    "model_type": "BetaVAE",
+    "model_path": "train_vae_output\\BetaVAE_BETA0.0001_LD12_LC16_LR0.001_TS20250426_210639\\models\\best_model.pt",
+    "mse": 7.846510249822001e-05,
+    "timestamp": "2025-04-26T21:31:21.605789",
+    "parameters": {
+        "input_dim": 600,
+        "hidden_dim": 32,
+        "latent_dim": 12,
+        "latent_channel": 16,
+        "batch_size": 32
+    }
+}
